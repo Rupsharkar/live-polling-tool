@@ -2,10 +2,8 @@ package main
 
 import (
 	"context"
-	"crypto/tls"
 	"log"
 	"os"
-	"strings"
 	"time"
 
 	"github.com/gin-contrib/cors"
@@ -26,7 +24,7 @@ func main() {
 	frontendURL := getenv("FRONTEND_URL", "http://localhost:5173")
 	mongoURI := mustGetenv("MONGO_URI")
 	mongoDB := getenv("MONGO_DB", "livepoll")
-	redisURL := strings.TrimSpace(getenv("REDIS_URL", "redis://localhost:6379"))
+	redisURL := getenv("REDIS_URL", "redis://localhost:6379")
 	jwtSecret := mustGetenv("JWT_SECRET")
 
 	ctx, cancel := context.WithTimeout(context.Background(), 15*time.Second)
@@ -51,13 +49,6 @@ func main() {
 	redisOpts, err := redis.ParseURL(redisURL)
 	if err != nil {
 		log.Fatal(err)
-	}
-
-	// Upstash Redis requires TLS.
-	if strings.HasPrefix(redisURL, "rediss://") {
-		redisOpts.TLSConfig = &tls.Config{
-			MinVersion: tls.VersionTLS12,
-		}
 	}
 
 	rdb := redis.NewClient(redisOpts)
