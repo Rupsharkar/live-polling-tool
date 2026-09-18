@@ -32,30 +32,36 @@ func main() {
 
 	mongoClient, err := mongo.Connect(ctx, options.Client().ApplyURI(mongoURI))
 	if err != nil {
-		log.Fatal(err)
+		log.Fatalf("MONGO CONNECT ERROR: %v", err)
 	}
 
 	if err = mongoClient.Ping(ctx, nil); err != nil {
-		log.Fatal(err)
+		log.Fatalf("MONGO PING ERROR: %v", err)
 	}
+
+	log.Println("MongoDB connected successfully")
 
 	db := mongoClient.Database(mongoDB)
 
 	repo, err := repository.New(db)
 	if err != nil {
-		log.Fatal(err)
+		log.Fatalf("REPOSITORY ERROR: %v", err)
 	}
 
 	redisOpts, err := redis.ParseURL(redisURL)
 	if err != nil {
-		log.Fatal(err)
+		log.Fatalf("REDIS URL ERROR: %v", err)
 	}
+
+	log.Printf("Redis address: %s", redisOpts.Addr)
 
 	rdb := redis.NewClient(redisOpts)
 
 	if err = rdb.Ping(context.Background()).Err(); err != nil {
-		log.Fatal(err)
+		log.Fatalf("REDIS PING ERROR: %v", err)
 	}
+
+	log.Println("Redis connected successfully")
 
 	redisService := services.NewRedisService(rdb)
 	auth := middleware.NewAuth(jwtSecret)
