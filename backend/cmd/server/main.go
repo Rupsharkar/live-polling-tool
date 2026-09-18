@@ -2,7 +2,6 @@ package main
 
 import (
 	"context"
-	"crypto/tls"
 	"log"
 	"os"
 	"time"
@@ -56,19 +55,9 @@ func main() {
 
 	log.Printf("Redis address: %s", redisOpts.Addr)
 
-	redisOpts.TLSConfig = &tls.Config{
-		MinVersion: tls.VersionTLS12,
-	}
-
 	rdb := redis.NewClient(redisOpts)
 
-	if err = rdb.Ping(context.Background()).Err(); err != nil {
-		log.Fatalf("REDIS PING ERROR: %v", err)
-	}
-
-	log.Println("Redis connected successfully")
-
-	log.Println("Redis connected successfully")
+	log.Println("Redis client initialized")
 
 	redisService := services.NewRedisService(rdb)
 	auth := middleware.NewAuth(jwtSecret)
