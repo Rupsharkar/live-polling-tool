@@ -8,6 +8,7 @@ import (
 
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
+	"github.com/joho/godotenv"
 	"github.com/redis/go-redis/v9"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
@@ -20,8 +21,10 @@ import (
 )
 
 func main() {
+	godotenv.Load()
+
 	port := getenv("PORT", "8080")
-	frontendURL := getenv("FRONTEND_URL", "http://localhost:5173")
+	frontendURL := getenv("FRONTEND_URL", "http://localhost:5174")
 	mongoURI := mustGetenv("MONGO_URI")
 	mongoDB := getenv("MONGO_DB", "livepoll")
 	redisURL := getenv("REDIS_URL", "redis://localhost:6379")
@@ -66,7 +69,7 @@ func main() {
 	router := gin.Default()
 
 	router.Use(cors.New(cors.Config{
-		AllowOrigins:     []string{frontendURL},
+		AllowOrigins: []string{"http://localhost:5173", "http://localhost:5174", "https://live-polling-tool-alpha.vercel.app"},
 		AllowMethods:     []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
 		AllowHeaders:     []string{"Origin", "Content-Type", "Authorization"},
 		AllowCredentials: true,
