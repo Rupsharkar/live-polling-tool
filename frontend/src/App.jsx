@@ -1,10 +1,7 @@
 import { useEffect, useState } from "react";
 
-const API_URL =
-  "https://live-polling-tool-s4wv.onrender.com/api";
-
-const WS_URL =
-  "wss://live-polling-tool-s4wv.onrender.com";
+const API_URL = "https://live-polling-tool-s4wv.onrender.com/api";
+const WS_URL = "wss://live-polling-tool-s4wv.onrender.com";
 
 function App() {
   const [page, setPage] = useState(
