@@ -66,9 +66,9 @@ func main() {
 	auth := middleware.NewAuth(jwtSecret)
 	handler := handlers.New(repo, redisService, auth, jwtSecret)
 
-	router := gin.Default()
+router := gin.Default()
 
-	router.Use(cors.New(cors.Config{
+router.Use(cors.New(cors.Config{
     AllowOriginFunc: func(origin string) bool {
         return true
     },
@@ -76,9 +76,9 @@ func main() {
     AllowHeaders: []string{"Origin", "Content-Type", "Authorization"},
     AllowCredentials: true,
     MaxAge: 12 * time.Hour,
-}))	
+}))
 
-	routes.Register(router, handler, auth, redisService)
+routes.Register(router, handler, auth, redisService)
 
 	log.Printf("server listening on :%s", port)
 
